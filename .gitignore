@@ -1,0 +1,36 @@
+# React Native
+node_modules/
+
+# Ignore Metro bundler cache
+metro-cache/
+
+# Ignore Yarn and npm logs
+yarn-error.log
+npm-debug.log*
+
+# Ignore build outputs
+android/app/build/
+ios/build/
+ios/Pods/
+
+# Xcode generated files
+*.xcworkspace
+*.xcuserdata
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# Android generated files
+*.iml
+.gradle/
+local.properties
+
+# macOS files
+.DS_Store
+
+# Expo
+.expo/
+.expo-shared/
+
+# Misc
+*.log
+*.lock
