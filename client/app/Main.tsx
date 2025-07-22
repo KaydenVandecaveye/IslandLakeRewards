@@ -72,6 +72,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',  // Push content and tab bar apart
     paddingTop: 50,
+    backgroundColor: 'white'
   },
   tabBar: {
     flexDirection: 'row',
