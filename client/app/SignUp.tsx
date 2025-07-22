@@ -1,12 +1,37 @@
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { auth, db } from '../config/firebase';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export default function SignUp() {
   const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleSignUp = async () => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      console.log("Creating profile for uid: ", user.uid);
+      const res = await fetch("http://localhost:5002/user/create-user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          uid: user.uid,
+          email: user.email,
+        }),
+      })
+
+      const data = await res.json();
+      console.log("Server response:", data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -37,7 +62,7 @@ export default function SignUp() {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.button} onPress={() => console.log(password)}>
+        <TouchableOpacity style={styles.button} onPress={() => handleSignUp()}>
           <Text style={styles.buttonText}>Create Account</Text>
         </TouchableOpacity>
       </View>
