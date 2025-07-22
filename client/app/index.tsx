@@ -1,14 +1,25 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useState } from 'react';
-import { router, useNavigation } from 'expo-router';
+import { useRouter } from "expo-router";
+import { auth } from '@/config/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 // Login Screen
 export default function HomeScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
-  const handleLogin = () => {
-    router.push("/Main");
+  const handleLogin = async () => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      Alert.alert("Logged In", `Welcome back ${userCredential.user.email}`);
+      router.push("/Main");
+    }
+    catch(error) {
+      console.error(error);
+      Alert.alert("Login failed");
+    }
   };
 
   return (
