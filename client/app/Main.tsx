@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import Profile from "../components/tabs/Profile";
 import Shop from "../components/tabs/Shop";
-import { auth } from '@/config/firebase';
+import { auth, db } from '@/config/firebase';
+import { doc, onSnapshot } from "firebase/firestore";
 import { getIdToken } from 'firebase/auth';
 
 export default function Main() {
@@ -12,48 +13,39 @@ export default function Main() {
   const user = auth.currentUser;
 
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        // check if user exists
-        console.log("user", user);
-        if (!user) {
-          Alert.alert("No user is signed in.");
-          return;
-        }
-        // generate and send id token to backend
-        const token = await getIdToken(user);
-        const response = await fetch('http://localhost:5002/user/info', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`, 
-          },
-        });
-        if (!response.ok) {
-          throw new Error('Failed to fetch user data');
-        }
-        // capture data in response
-        const data = await response.json();
-        console.log("Data: ", data);
-        setUserData(data)
-      }
-      catch(e) {
-        console.error("Error fetching info:", e);
-        Alert.alert("Error", "Could not load user data");
-      }
-      finally {
-        setLoading(false);
-      }
-    };
+    if (!user) {
+      Alert.alert("No user is signed in.");
+      return;
+    }
 
-    fetchProfile();
-  }, []);
+    const userDocRef = doc(db, "users", user.uid);
+
+    const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setUserData(docSnap.data());
+      } else {
+        Alert.alert("Error", "User data does not exist");
+      }
+      setLoading(false);
+    }, (error) => {
+      console.error("onSnapshot error:", error);
+      Alert.alert("Error", "Failed to load user data");
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+
+  }, [user]);
+
+  if (loading) return <Text>Loading...</Text>;
 
   return (
   
     <View style={styles.container}>
       {/* Main content */}
-      {currentTab === 'profile' ? <Profile /> : <Shop />}
 
+      {currentTab === 'profile' ? <Profile userData={userData}/> : <Shop />}
+      
       {/* Bottom tabs */}
       <View style={styles.tabBar}>
         <TouchableOpacity

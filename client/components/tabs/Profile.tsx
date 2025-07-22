@@ -1,17 +1,18 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-export default function Profile() {
+type ProfileProps = {
+    userData: any; 
+  };
+  
+  const Profile: React.FC<ProfileProps> = ({ userData }) => {
     return (
-        <View style={styles.main}>
-            <Text>Profile</Text>
-        </View>
-    )
-}
-
-const styles = StyleSheet.create({
-    main: {
-        backgroundColor: '#C8C8C8',
-        flex: 1
-    }
-})
+      <View>
+        <Text>Welcome, {userData?.email || 'User'}!</Text>
+        <Text>Your points: {userData?.points}</Text>
+      </View>
+    );
+  };
+  
+  export default Profile;
+  
