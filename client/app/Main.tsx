@@ -72,13 +72,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',  // Push content and tab bar apart
     paddingTop: 50,
-    backgroundColor: 'white'
+    backgroundColor: '#F8F9FB'
   },
   tabBar: {
     flexDirection: 'row',
     justifyContent: 'center',
     paddingVertical: 20,
-    backgroundColor: '#F9F9F9', 
+    backgroundColor: 'white', 
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: -2 },
+    shadowRadius: 4,
   },
   tabButton: {
     paddingVertical: 10,
@@ -88,7 +93,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   activeTab: {
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#4A90E2',
   },
   tabText: {
     color: 'black',
