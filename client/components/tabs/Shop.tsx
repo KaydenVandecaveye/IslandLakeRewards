@@ -7,9 +7,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
+type ShopProps = {
+    userData: any; 
+};
 
-
-export default function Shop() {
+const Shop: React.FC<ShopProps> = ({ userData }) => {
     const [deals, setDeals] = useState<Deal[]>([]);
     const [loading, setLoading] = useState(true);
     const limitedTimeDeals = deals.filter(deal => deal.type === 'limited');
@@ -35,18 +37,18 @@ export default function Shop() {
 
     return (
         <View style={styles.main}>
-        <Text style={styles.header}>Shop</Text>
-        <ScrollView contentContainerStyle={styles.list}>
-            <Text style={styles.sectionTitle}>⏰ Limited-Time Deals</Text>
-            {limitedTimeDeals.map((deal) => (
-            <DealCard key={deal.id} deal={deal} />
-            ))}
+            <Text style={styles.header}>Shop</Text>
+            <ScrollView contentContainerStyle={styles.list}>
+                <Text style={styles.sectionTitle}>⏰ Limited-Time Deals</Text>
+                {limitedTimeDeals.map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+                ))}
 
-            <Text style={styles.sectionTitle}>🏷️ Permanent Deals</Text>
-            {permanentDeals.map((deal) => (
-            <DealCard key={deal.id} deal={deal} />
-            ))}
-        </ScrollView>
+                <Text style={styles.sectionTitle}>🏷️ Permanent Deals</Text>
+                {permanentDeals.map((deal) => (
+                <DealCard key={deal.id} deal={deal} />
+                ))}
+            </ScrollView>
         </View>
     );
     }
@@ -81,6 +83,8 @@ const DealCard = ({ deal }: { deal: Deal }) => (
     </TouchableOpacity>
   </View>
 );
+
+export default Shop;
 
 const styles = StyleSheet.create({
   main: {

@@ -6,7 +6,6 @@ type ProfileProps = {
     userData: any; 
 };
 
-
 // replace with fetch functionallity
 const mockInventory = [
   { id: 1, name: 'Golf Ball Pack', description: 'Set of 12 balls', quantity: 2 },

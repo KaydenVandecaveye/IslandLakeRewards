@@ -22,6 +22,7 @@ export default function Main() {
 
     const unsubscribe = onSnapshot(userDocRef, (docSnap) => {
       if (docSnap.exists()) {
+        console.log("User Data: ", docSnap.data());
         setUserData(docSnap.data());
       } else {
         Alert.alert("Error", "User data does not exist");
@@ -44,7 +45,7 @@ export default function Main() {
     <View style={styles.container}>
       {/* Main content */}
 
-      {currentTab === 'profile' ? <Profile userData={userData}/> : <Shop />}
+      {currentTab === 'profile' ? <Profile userData={userData}/> : <Shop userData={userData}/>}
       
       {/* Bottom tabs */}
       <View style={styles.tabBar}>
