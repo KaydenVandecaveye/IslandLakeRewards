@@ -6,6 +6,8 @@ type ProfileProps = {
     userData: any; 
 };
 
+
+// replace with fetch functionallity
 const mockInventory = [
   { id: 1, name: 'Golf Ball Pack', description: 'Set of 12 balls', quantity: 2 },
   { id: 2, name: 'Free Round Voucher', description: 'Valid on weekends', quantity: 1 },
@@ -37,7 +39,7 @@ const Profile: React.FC<ProfileProps> = ({ userData }) => {
           <Text style={styles.header}>Your Inventory</Text>
           <Inventory items={mockInventory}/>
         </View>
-        
+
       </ScrollView>
     </SafeAreaView>
   );

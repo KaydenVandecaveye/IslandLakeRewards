@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -7,70 +7,58 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-// placeholder for fetched deal data
-const deals = [
-  {
-    id: '29102912910',
-    title: 'Holiday Voucher',
-    description: 'Limited edition, valid for one free round.',
-    price: 300,
-    expiresAt: '2025-07-30',
-    type: 'limited'
-  },
-  {
-    id: '29102912911',
-    title: '50% Off Glove',
-    description: 'Today only!',
-    price: 150,
-    expiresAt: null,
-    type: 'permanent'
-  },
-  {
-    id: '29102912912',
-    title: 'Golf Ball Pack',
-    description: 'Set of 12 premium balls.',
-    price: 100,
-    expiresAt: '2025-07-30',
-    type: 'limited'
-  },
-  {
-    id: '29102912913',
-    title: 'Free Weekend Voucher',
-    description: 'Valid for one weekend round.',
-    price: 250,
-    expiresAt: null,
-    type: 'permanent'
-  },
-];
 
-const limitedTimeDeals = deals.filter(deal => deal.type === 'limited');
-const permanentDeals = deals.filter(deal => deal.type === 'permanent');
 
 export default function Shop() {
-  return (
-    <View style={styles.main}>
-      <Text style={styles.header}>Shop</Text>
-      <ScrollView contentContainerStyle={styles.list}>
-        <Text style={styles.sectionTitle}>⏰ Limited-Time Deals</Text>
-        {limitedTimeDeals.map((deal) => (
-          <DealCard key={deal.id} deal={deal} />
-        ))}
+    const [deals, setDeals] = useState<Deal[]>([]);
+    const [loading, setLoading] = useState(true);
+    const limitedTimeDeals = deals.filter(deal => deal.type === 'limited');
+    const permanentDeals = deals.filter(deal => deal.type === 'permanent');
 
-        <Text style={styles.sectionTitle}>🏷️ Permanent Deals</Text>
-        {permanentDeals.map((deal) => (
-          <DealCard key={deal.id} deal={deal} />
-        ))}
-      </ScrollView>
-    </View>
-  );
-}
+    useEffect(() => {
+        const fetchDeals = async () => {
+            try {
+                const res = await fetch('http://localhost:5002/deal');
+                const data = await res.json();
+                console.log("Fetched deals data: ", data);
+                setDeals(data);
+                setLoading(false);
+            }
+            catch(e) {
+                console.error("Error fetching deals: ", e);
+            }
+        };
+        fetchDeals();
+    }, []);
 
+    if (loading) return <Text>Loading...</Text>;
+
+    return (
+        <View style={styles.main}>
+        <Text style={styles.header}>Shop</Text>
+        <ScrollView contentContainerStyle={styles.list}>
+            <Text style={styles.sectionTitle}>⏰ Limited-Time Deals</Text>
+            {limitedTimeDeals.map((deal) => (
+            <DealCard key={deal.id} deal={deal} />
+            ))}
+
+            <Text style={styles.sectionTitle}>🏷️ Permanent Deals</Text>
+            {permanentDeals.map((deal) => (
+            <DealCard key={deal.id} deal={deal} />
+            ))}
+        </ScrollView>
+        </View>
+    );
+    }
+
+// deal type
 type Deal = {
   id: string;
   title: string;
   description: string;
   price: number;
-  expiresAt: string;
+  expiresAt: any;
+  type: 'permanent' | 'limited';
 };
 
 const DealCard = ({ deal }: { deal: Deal }) => (
@@ -78,12 +66,12 @@ const DealCard = ({ deal }: { deal: Deal }) => (
     <Text style={styles.title}>{deal.title}</Text>
     <Text style={styles.description}>{deal.description}</Text>
     <Text style={styles.price}>Price: {deal.price} pts</Text>
+
     {deal.expiresAt !== null && 
         <Text>
             Expires on {deal.expiresAt}
         </Text>
     }
-
 
     <TouchableOpacity
       style={styles.redeemButton}

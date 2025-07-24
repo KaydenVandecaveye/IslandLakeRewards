@@ -3,10 +3,6 @@ const router = express.Router();
 const { admin, db } = require('../config/firebaseAdmin');
 const verifyAuthToken = require('../middleware/verifyAuthToken');
 
-router.get("/test", (req, res) => {
-    console.log("GET /api/test called");
-    res.json({ message: "Users route is working!" });
-});
 
 function generate5DigitId() {
     return Math.floor(10000 + Math.random() * 90000).toString();
